@@ -230,3 +230,19 @@ streamlit run frontend/app.py
 ## License
 
 Academic project for university submission.
+
+## ER-Diagram
+
+```mermaid
+erDiagram
+    PROPERTY_AREAS ||--o{ APPLICANTS : has
+    EMPLOYER_CATEGORIES ||--o{ APPLICANTS : has
+    APPLICANTS ||--o{ EMPLOYMENT : has
+    APPLICANTS ||--o{ FINANCIAL_PROFILE : has
+    APPLICANTS ||--o{ LOAN_APPLICATIONS : submits
+    LOAN_PURPOSES ||--o{ LOAN_APPLICATIONS : used_for
+    LOAN_APPLICATIONS ||--o{ ML_PREDICTIONS : gets
+    ML_PREDICTIONS ||--o{ RAG_EXPLANATIONS : has
+    BANK_MANAGERS ||--o{ AUDIT_LOG : performs
+    LOAN_APPLICATIONS ||--o{ AUDIT_LOG : tracked_in
+```
