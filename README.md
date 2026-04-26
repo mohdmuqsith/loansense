@@ -186,6 +186,10 @@ psql -U postgres -d loansense -f backend\db\views.sql
 psql -U postgres -d loansense -f backend\db\indexes.sql
 psql -U postgres -d loansense -f backend\db\rbac.sql
 psql -U postgres -d loansense -f backend\db\seed.sql
+
+```powershell
+python backend/rag/ingest.py
+```
 cd backend
 uvicorn app:app --reload --port 8000
 ```
