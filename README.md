@@ -169,6 +169,33 @@ Use one of these seeded accounts:
 - The explanation engine is currently rule-based, so it does not depend on Ollama for normal operation.
 - If you want to re-enable LLM-style explanations later, Ollama can be installed separately, but it is not required for the current working version.
 
+## Setup For Team Members
+
+```powershell
+git clone https://github.com/mohdmuqsith/loansense.git
+cd loansense
+copy .env.example .env
+python -m venv venv
+.\venv\Scripts\Activate.ps1
+pip install -r requirements.txt
+psql -U postgres -d loansense -f backend\db\schema.sql
+psql -U postgres -d loansense -f backend\db\functions.sql
+psql -U postgres -d loansense -f backend\db\procedures.sql
+psql -U postgres -d loansense -f backend\db\triggers.sql
+psql -U postgres -d loansense -f backend\db\views.sql
+psql -U postgres -d loansense -f backend\db\indexes.sql
+psql -U postgres -d loansense -f backend\db\rbac.sql
+psql -U postgres -d loansense -f backend\db\seed.sql
+cd backend
+uvicorn app:app --reload --port 8000
+```
+
+Open a second terminal for the frontend:
+
+```powershell
+streamlit run frontend/app.py
+```
+
 ## Troubleshooting
 
 - If `uvicorn app:app` fails from the project root, run it from `backend/`.
