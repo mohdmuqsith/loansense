@@ -1,0 +1,113 @@
+# LoanSenseAI Policy Knowledge Base
+# Use this as the canonical policy reference for explanations.
+
+# PRIORITY LEVELS
+# CRITICAL = direct approval / rejection
+# HIGH     = strong impact
+# MEDIUM   = moderate impact
+# LOW      = minor impact
+
+## 1. Credit Score Policy [CRITICAL]
+[REJECT_CREDIT_SCORE]
+IF credit_score < 580 -> REJECT
+
+[HIGH_RISK_CREDIT]
+IF 620 <= credit_score < 670 -> REQUIRE_COLLATERAL
+
+[STANDARD_CREDIT]
+IF 670 <= credit_score < 740 -> APPROVE_STANDARD
+
+[FAST_TRACK_CREDIT]
+IF credit_score >= 740 -> APPROVE_FAST
+
+## 2. DTI Policy [CRITICAL]
+[LOW_RISK_DTI]
+IF dti_ratio <= 0.35 -> LOW_RISK
+
+[MODERATE_RISK_DTI]
+IF 0.36 <= dti_ratio <= 0.50 -> REQUIRE_STRONG_CREDIT
+
+[REJECT_HIGH_DTI]
+IF dti_ratio > 0.50 AND collateral_value < (2 * loan_amount) -> REJECT
+
+## 3. Income Policy [HIGH]
+[REJECT_LOW_INCOME]
+IF applicant_income + coapplicant_income < 3000 -> REJECT
+
+[UNEMPLOYED_RULE]
+IF employment_status = "Unemployed" AND coapplicant_income < 3000 -> REJECT
+
+## 4. Existing Loans Policy [HIGH]
+[MAX_LOANS]
+IF existing_loans >= 4 AND dti_ratio >= 0.30 -> REJECT
+
+[LOAN_REDUCTION]
+IF existing_loans >= 1 -> reduce_max_loan_amount by 10% per loan
+
+## 5. Loan Amount Policy [CRITICAL]
+[MIN_LOAN]
+IF loan_amount < 1000 -> REJECT
+
+[MAX_LOAN]
+IF loan_amount > 500000 -> REJECT
+
+[INCOME_MULTIPLE]
+IF loan_amount > (5 * annual_income) -> REJECT
+
+[HOME_LTV]
+IF loan_purpose = "Home" AND loan_amount > 0.8 * collateral_value -> REJECT
+
+## 6. Loan Term Policy [MEDIUM]
+[PERSONAL_TERM]
+IF loan_purpose = "Personal" AND loan_term > 84 -> REJECT
+
+[CAR_TERM]
+IF loan_purpose = "Car" AND loan_term > 84 -> REJECT
+
+[HOME_TERM]
+IF loan_purpose = "Home" AND loan_term > 360 -> REJECT
+
+[EDUCATION_TERM]
+IF loan_purpose = "Education" AND loan_term > 120 -> REJECT
+
+[BUSINESS_TERM]
+IF loan_purpose = "Business" AND loan_term > 120 -> REJECT
+
+## 7. Education Policy [MEDIUM]
+[NON_GRADUATE_RULE]
+IF education_level = "Not Graduate" AND credit_score < 680 AND collateral_value < loan_amount -> REJECT
+
+## 8. Employer Policy [MEDIUM]
+[GOVERNMENT_EMPLOYEE]
+IF employer_category = "Government" -> LOW_RISK
+
+[MNC_EMPLOYEE]
+IF employer_category = "MNC" -> LOW_RISK
+
+## 9. Collateral Policy [HIGH]
+[COLLATERAL_BENEFIT]
+IF collateral_value >= loan_amount -> REDUCE_RISK
+
+[HIGH_RISK_COLLATERAL]
+IF credit_score < 670 OR dti_ratio > 0.35 -> collateral is important
+
+## 10. Dependents Policy [LOW]
+[DEPENDENTS_MEDIUM]
+IF dependents >= 2 AND dependents <= 3 -> INCREASE_RISK
+
+[DEPENDENTS_HIGH]
+IF dependents >= 4 -> REQUIRE_HIGHER_INCOME
+
+## 11. Age Policy [CRITICAL]
+[MIN_AGE]
+IF age < 18 -> REJECT
+
+[MAX_AGE_AT_MATURITY]
+IF age + (loan_term / 12) > 70 -> REJECT
+
+## Explanation Style
+When explaining a decision:
+- Use the strongest applicable policy rules first.
+- Mention 2 to 3 concrete reasons.
+- Keep it factual and concise.
+- Do not invent missing fields or policy thresholds.

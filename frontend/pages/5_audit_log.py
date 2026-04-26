@@ -1,0 +1,50 @@
+import streamlit as st
+import requests
+import pandas as pd
+
+API_URL = "http://localhost:8000"
+
+st.set_page_config(page_title="Audit Log", page_icon="📋", layout="wide")
+st.title("📋 Audit Log")
+
+if not st.session_state.get("token"):
+    st.warning("🔒 Please login first.")
+    st.stop()
+
+headers = {"Authorization": f"Bearer {st.session_state.token}"}
+
+if st.button("🔄 Refresh"):
+    st.rerun()
+
+try:
+    res = requests.get(f"{API_URL}/audit/", headers=headers)
+
+    if res.status_code == 200:
+        data = res.json()
+
+        if not data:
+            st.info("No audit records found.")
+            st.stop()
+
+        df = pd.DataFrame(data)
+
+        # Stats
+        col1, col2, col3 = st.columns(3)
+        col1.metric("Total Changes", len(df))
+        col2.metric("Approvals",     len(df[df["new_status"] == "Approved"]))
+        col3.metric("Rejections",    len(df[df["new_status"] == "Rejected"]))
+
+        st.markdown("---")
+
+        # Display table
+        display_cols = ["log_id", "application_id", "manager_name", "old_status", "new_status", "changed_at", "change_note"]
+        display_cols = [c for c in display_cols if c in df.columns]
+        st.dataframe(df[display_cols], use_container_width=True)
+
+    elif res.status_code == 401:
+        st.error("Session expired. Please login again.")
+    else:
+        st.error("Failed to load audit log.")
+
+except Exception as e:
+    st.error(f"Could not connect to API: {e}")
