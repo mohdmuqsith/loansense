@@ -138,7 +138,8 @@ uvicorn app:app --reload --port 8000
 ### Terminal 2 - Frontend
 
 ```powershell
-streamlit run frontend/app.py
+cd frontend
+streamlit run app.py
 ```
 
 Then open the Streamlit URL shown in the terminal.
@@ -196,7 +197,8 @@ uvicorn app:app --reload --port 8000
 Open a second terminal for the frontend:
 
 ```powershell
-streamlit run frontend/app.py
+cd frontend
+streamlit run app.py
 ```
 
 ## Troubleshooting
