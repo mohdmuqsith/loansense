@@ -233,6 +233,23 @@ streamlit run app.py
 
 Academic project for university submission.
 
+
+## API Flow
+
+```mermaid
+flowchart LR
+  UI[Streamlit frontend] --> R[FastAPI routes]
+  R --> C[Controllers]
+  C --> S[Schemas]
+  C --> M[ORM Models]
+  M --> DB[(PostgreSQL)]
+  C --> ML[ML inference]
+  C --> RAG[Policy explanation]
+  R --> AUTH[JWT middleware]
+  DB --> SQL[Views / Procedures / Triggers / Functions]
+
+```
+
 ## ER-Diagram
 
 ```mermaid
@@ -248,3 +265,5 @@ erDiagram
     BANK_MANAGERS ||--o{ AUDIT_LOG : performs
     LOAN_APPLICATIONS ||--o{ AUDIT_LOG : tracked_in
 ```
+
+
