@@ -66,7 +66,7 @@ The project demonstrates practical database concepts:
 ### 1. Clone and open the project
 
 ```powershell
-git clone <repo-url>
+git clone https://github.com/mohdmuqsith/loansense.git
 cd loansense
 ```
 
