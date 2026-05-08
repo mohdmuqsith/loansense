@@ -91,3 +91,73 @@ SELECT
 FROM bank_managers bm
 LEFT JOIN audit_log al ON al.manager_id = bm.manager_id
 GROUP BY bm.manager_id, bm.full_name, bm.username;
+
+
+-- 4. application_full_view
+-- One readable row per application for pgAdmin/demo inspection.
+-- Keeps normalized table IDs intact while showing the full relationship chain:
+-- applicant -> application -> latest prediction -> latest explanation.
+CREATE OR REPLACE VIEW application_full_view AS
+SELECT
+    a.applicant_id,
+    la.application_id,
+    mp.prediction_id,
+    re.explanation_id,
+
+    a.first_name || ' ' || a.last_name       AS full_name,
+    a.age,
+    a.gender,
+    a.marital_status,
+    a.dependents,
+    a.education_level,
+
+    pa.area_type,
+    ec.category_name                         AS employer_category,
+
+    e.employment_status,
+    e.applicant_income,
+    e.coapplicant_income,
+    (e.applicant_income + e.coapplicant_income) AS total_income,
+
+    fp.credit_score,
+    fp.existing_loans,
+    fp.dti_ratio,
+    fp.savings,
+    fp.collateral_value,
+
+    lp.purpose_name                          AS loan_purpose,
+    la.loan_amount,
+    la.loan_term,
+    la.status                                AS manager_status,
+    la.applied_at,
+    la.reviewed_at,
+
+    mp.approved                              AS ml_approved,
+    mp.confidence                            AS ml_confidence,
+    mp.model_version,
+    mp.predicted_at,
+
+    re.reasoning_text,
+    re.retrieved_context,
+    re.generated_at                          AS explanation_generated_at
+FROM loan_applications la
+JOIN applicants a ON a.applicant_id = la.applicant_id
+LEFT JOIN property_areas pa ON pa.area_id = a.area_id
+LEFT JOIN employer_categories ec ON ec.category_id = a.category_id
+LEFT JOIN employment e ON e.applicant_id = a.applicant_id
+LEFT JOIN financial_profile fp ON fp.applicant_id = a.applicant_id
+LEFT JOIN loan_purposes lp ON lp.purpose_id = la.purpose_id
+LEFT JOIN LATERAL (
+    SELECT prediction_id, approved, confidence, model_version, predicted_at
+    FROM ml_predictions
+    WHERE application_id = la.application_id
+    ORDER BY predicted_at DESC, prediction_id DESC
+    LIMIT 1
+) mp ON TRUE
+LEFT JOIN LATERAL (
+    SELECT explanation_id, reasoning_text, retrieved_context, generated_at
+    FROM rag_explanations
+    WHERE prediction_id = mp.prediction_id
+    ORDER BY generated_at DESC, explanation_id DESC
+    LIMIT 1
+) re ON TRUE;
