@@ -4,8 +4,7 @@ services:
     runtime: python
     plan: free
     buildCommand: pip install -r requirements.txt && cd backend && python -m ml.train && cd .. && python backend/rag/ingest.py
-    preDeployCommand: python scripts/init_db.py
-    startCommand: cd backend && uvicorn app:app --host 0.0.0.0 --port $PORT
+    startCommand: python scripts/init_db.py && cd backend && uvicorn app:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /
     envVars:
       - key: DATABASE_URL

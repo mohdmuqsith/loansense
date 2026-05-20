@@ -18,11 +18,28 @@ SQL_FILES = [
 ]
 
 
+def database_is_initialized(cur) -> bool:
+    cur.execute(
+        """
+        SELECT COUNT(*)
+        FROM information_schema.tables
+        WHERE table_schema = 'public'
+          AND table_name IN ('bank_managers', 'loan_applications')
+        """
+    )
+    return cur.fetchone()[0] > 0
+
+
 def main() -> None:
     database_url = os.environ["DATABASE_URL"]
+    reset_database = os.getenv("RESET_DATABASE", "").lower() in {"1", "true", "yes"}
 
     with psycopg2.connect(database_url) as conn:
         with conn.cursor() as cur:
+            if database_is_initialized(cur) and not reset_database:
+                print("Database already initialized. Skipping schema load.")
+                return
+
             for filename in SQL_FILES:
                 path = DB_DIR / filename
                 print(f"Running {path.relative_to(ROOT)}")
