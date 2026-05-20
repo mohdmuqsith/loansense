@@ -41,9 +41,9 @@ INSERT INTO loan_purposes (purpose_name) VALUES
 ON CONFLICT (purpose_name) DO NOTHING;
 
 INSERT INTO bank_managers (username, password_hash, full_name, is_active) VALUES
-    ('admin',    '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'Admin User',    TRUE),
-    ('manager1', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'Sarah Ahmed',   TRUE),
-    ('manager2', '$2b$12$EixZaYVK1fsbw1ZfbX3OXePaWxn96p36WQoeG6Lruj3vjPGga31lW', 'Mashoor Gulati', TRUE)
+    ('admin',    '$2b$12$fC56Sj/FxMtQJyXoJ8veIuQuA2CcFhy6kjDIZHmv7zBL/eI0vQCeq', 'Admin User',    TRUE),
+    ('manager1', '$2b$12$fC56Sj/FxMtQJyXoJ8veIuQuA2CcFhy6kjDIZHmv7zBL/eI0vQCeq', 'Sarah Ahmed',   TRUE),
+    ('manager2', '$2b$12$fC56Sj/FxMtQJyXoJ8veIuQuA2CcFhy6kjDIZHmv7zBL/eI0vQCeq', 'Mashoor Gulati', TRUE)
 ON CONFLICT (username) DO NOTHING;
 
 INSERT INTO applicants (first_name, last_name, age, gender, marital_status, dependents, education_level, area_id, category_id) VALUES
