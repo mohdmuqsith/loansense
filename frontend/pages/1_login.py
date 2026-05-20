@@ -40,6 +40,9 @@ else:
             submit = st.form_submit_button("Login", use_container_width=True)
 
         if submit:
+            username = username.strip().lower()
+            password = password.strip()
+
             if not username or not password:
                 st.error("Please enter username and password.")
             else:

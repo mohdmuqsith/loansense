@@ -10,6 +10,9 @@ DEMO_MANAGER_PASSWORD = "password123"
 
 
 def login(username: str, password: str, db: Session):
+    username = username.strip().lower()
+    password = password.strip()
+
     manager = db.query(BankManager).filter(
         BankManager.username == username,
         BankManager.is_active == True
