@@ -1,5 +1,6 @@
 import streamlit as st
 
+from config import API_URL
 from theme import apply_theme, info_card, render_eyebrow, render_section_header, stat_card, step_card
 
 st.set_page_config(
@@ -44,7 +45,7 @@ with left:
     )
     c1, c2, c3 = st.columns(3)
     with c1:
-        st.markdown(stat_card("API", "FastAPI", "Backend on localhost:8000"), unsafe_allow_html=True)
+        st.markdown(stat_card("API", "FastAPI", f"Backend at {API_URL}"), unsafe_allow_html=True)
     with c2:
         st.markdown(stat_card("UI", "Streamlit", "Fast demo-first frontend"), unsafe_allow_html=True)
     with c3:

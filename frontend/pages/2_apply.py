@@ -1,9 +1,8 @@
 import requests
 import streamlit as st
 
+from config import API_URL
 from theme import apply_theme, render_eyebrow, render_section_header
-
-API_URL = "http://localhost:8000"
 
 st.set_page_config(page_title="Apply for Loan", page_icon="LS")
 apply_theme()
@@ -103,4 +102,3 @@ if submit:
                 st.error(f"Error: {res.json().get('detail', 'Something went wrong')}")
         except Exception as e:
             st.error(f"Could not connect to API: {e}")
-

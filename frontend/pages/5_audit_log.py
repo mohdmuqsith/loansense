@@ -2,9 +2,8 @@ import requests
 import pandas as pd
 import streamlit as st
 
+from config import API_URL
 from theme import apply_theme, render_eyebrow, render_section_header
-
-API_URL = "http://localhost:8000"
 
 st.set_page_config(page_title="Audit Log", page_icon="LS", layout="wide")
 apply_theme()
@@ -64,4 +63,3 @@ try:
 
 except Exception as e:
     st.error(f"Could not connect to API: {e}")
-
